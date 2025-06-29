@@ -1,0 +1,13 @@
+### Estrutura de pastas:
+
+backend/
+├── config/
+│   └── database.js
+├── controllers/
+├── middlewares/
+├── middlewares/
+├── models/
+├── routes/
+├── sql
+├── server.js
+└── .env
