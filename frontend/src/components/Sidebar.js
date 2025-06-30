@@ -23,7 +23,7 @@ export default function Sidebar() {
   return (
     <aside className="w-60 bg-[#34375a] text-white p-6 flex flex-col justify-between min-h-screen">
       <div>
-        <h2 className="text-xl font-bold mb-8">Finance App</h2>
+        <h2 className="text-xl font-bold mb-8">Dealle Arquitetura & Marcenaria Moderna LTDA</h2>
         <nav className="flex flex-col gap-4">
           {menuItems.map((item, idx) => (
             <button
