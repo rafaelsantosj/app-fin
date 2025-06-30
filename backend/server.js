@@ -4,6 +4,7 @@ require('dotenv').config();
 const sequelize = require('./config/database');
 const Income = require('./models/Income');
 const IncomePart = require('./models/IncomePart');
+const PORT = process.env.PORT || 3001;
 
 Income.hasMany(IncomePart, { foreignKey: 'income_id' });
 IncomePart.belongsTo(Income, { foreignKey: 'income_id' });
@@ -44,6 +45,6 @@ app.get('/', (req, res) => res.send('API Online 🚀'));
 sequelize.sync({ alter: true })
   .then(() => {
     console.log('Banco sincronizado com Sequelize!');
-    app.listen(3001, () => console.log('Servidor rodando em http://localhost:3001'));
+    app.listen(3001, () => console.log(`Servidor rodando na porta ${PORT}`));
   })
   .catch(err => console.error('Erro ao conectar no banco:', err));
