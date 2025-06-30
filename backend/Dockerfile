@@ -1,18 +1,19 @@
-# Usa uma imagem Node.js oficial
+# Use imagem oficial Node.js
 FROM node:18
 
-# Cria diretório de trabalho
-WORKDIR /app
+# Cria diretório de app
+WORKDIR /usr/src/app
 
-# Copia os arquivos de dependências e instala
+# Copia dependências
 COPY package*.json ./
 RUN npm install
 
-# Copia todo o código
+# Copia todo o restante
 COPY . .
 
-# Garante que a porta 8080 será usada
+# Define porta obrigatória para Cloud Run
+ENV PORT 8080
 EXPOSE 8080
 
-# Comando para iniciar o app
-CMD ["node", "server.js"]
+# Comando para rodar o backend
+CMD ["npm", "start"]
