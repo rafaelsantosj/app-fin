@@ -1,19 +1,20 @@
-# Use imagem oficial Node.js
+# Dockerfile
+
+# Etapa 1: usa uma imagem base com Node.js
 FROM node:18
 
-# Cria diretório de app
-WORKDIR /usr/src/app
+# Cria diretório de trabalho
+WORKDIR /app
 
-# Copia dependências
+# Copia os arquivos do projeto
 COPY package*.json ./
-RUN npm install
-
-# Copia todo o restante
 COPY . .
 
-# Define porta obrigatória para Cloud Run
-ENV PORT 8080
+# Instala dependências
+RUN npm install
+
+# Expõe a porta padrão do Cloud Run
 EXPOSE 8080
 
-# Comando para rodar o backend
-CMD ["npm", "start"]
+# Inicia a aplicação
+CMD [ "node", "index.js" ]
