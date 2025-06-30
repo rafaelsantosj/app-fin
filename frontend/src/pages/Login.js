@@ -46,14 +46,7 @@ export default function Login({ onLogin }) {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit" className="bg-black text-white p-2 rounded w-full mb-2">Entrar</button>
-
-        <button
-          type="button"
-          onClick={() => navigate('/register')}
-          className="text-[#cbd5e1] underline w-full mt-2"
-        >
-          Criar conta
-        </button>
+        
       </form>
     </div>
   );
