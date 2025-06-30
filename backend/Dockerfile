@@ -1,12 +1,17 @@
-FROM node:20
+# backend/Dockerfile
 
-WORKDIR /app
+FROM node:18
 
+# Cria diretório de app
+WORKDIR /usr/src/app
+
+# Copia arquivos
 COPY package*.json ./
 RUN npm install
-
 COPY . .
 
-EXPOSE 3001
+# Expõe a porta padrão do Cloud Run
+EXPOSE 8080
 
-CMD ["node", "server.js"]
+# Inicia a aplicação
+CMD [ "node", "index.js" ]
