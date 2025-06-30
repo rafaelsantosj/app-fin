@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'); // <- Faltava essa linha
 const router = express.Router();
 const { register, login } = require('../controllers/authController');
 
