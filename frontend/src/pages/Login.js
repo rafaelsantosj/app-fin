@@ -9,11 +9,7 @@ export default function Login({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      alert('Por favor, preencha todos os campos.');
-      return;
-    }
+    if (!email || !password) return alert('Preencha todos os campos.');
 
     try {
       const res = await api.post('/auth/login', { email, password });
@@ -22,24 +18,26 @@ export default function Login({ onLogin }) {
       if (onLogin) onLogin(res.data.user);
       navigate('/');
     } catch (err) {
-      const msg = err.response?.data?.message || 'E-mail ou senha inválidos';
-      alert(msg);
+      alert(err.response?.data?.message || 'E-mail ou senha inválidos');
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white text-[#34375a]">
-      <div className="text-center mb-10">
-        <h1 className="text-2xl sm:text-3xl font-light">DEALLE ARQUITETURA &</h1>
-        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight">MARCENARIA MODERNA LTDA</h2>
+    <div
+      className="min-h-screen bg-cover bg-center flex flex-col items-center justify-center px-4"
+      style={{ backgroundImage: 'url(/fundo-login.jpg)' }} // 🔁 ajuste o caminho conforme sua imagem
+    >
+      <div className="text-center mb-8">
+        <h1 className="text-xl sm:text-2xl text-[#1d2c5e] font-light tracking-wide">DEALLE ARQUITETURA &</h1>
+        <h2 className="text-2xl sm:text-4xl font-extrabold text-[#34375a]">MARCENARIA MODERNA LTDA</h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-[#34375a] p-8 rounded-xl text-white w-full max-w-sm">
-        <h1 className="text-xl mb-4">Login</h1>
+      <form onSubmit={handleSubmit} className="bg-[#34375a] p-8 rounded-xl shadow-lg w-full max-w-sm text-white">
+        <h3 className="text-xl font-semibold mb-4 text-center">Login</h3>
         <input
           type="email"
           placeholder="E-mail"
-          className="w-full p-2 mb-4 rounded text-black"
+          className="w-full p-2 mb-3 rounded text-black"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -50,8 +48,9 @@ export default function Login({ onLogin }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" className="bg-black text-white p-2 rounded w-full mb-2">Entrar</button>
-        
+        <button type="submit" className="bg-black hover:bg-gray-800 text-white py-2 rounded w-full">
+          Entrar
+        </button>
       </form>
     </div>
   );
