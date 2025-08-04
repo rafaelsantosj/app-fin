@@ -19,58 +19,34 @@ exports.create = async (req, res) => {
   try {
     const {
       description,
-      amount,
       date,
-      payment_type,
-      installments,
-      signal_date,
-      end_date
+      parts // [{ amount, payment_type, parcelas, desconto_maquininha, date, label }]
     } = req.body;
+
+    if (!Array.isArray(parts) || parts.length === 0) {
+      return res.status(400).json({ message: 'É necessário informar ao menos uma forma de pagamento.' });
+    }
+
+    const totalAmount = parts.reduce((acc, part) => acc + Number(part.amount), 0);
 
     const newIncome = await Income.create({
       description,
-      amount,
+      amount: totalAmount,
       date,
-      payment_type,
-      installments: payment_type === 'parcelado' ? installments : null,
-      signal_date: payment_type === 'sinal_e_fim' ? signal_date : null,
-      end_date: payment_type === 'sinal_e_fim' ? end_date : null,
       user_id: req.user.id
     });
 
-    if (payment_type === 'parcelado' && installments > 1) {
-      const parts = [];
-      const parcelaValue = amount / installments;
-      for (let i = 0; i < installments; i++) {
-        const partDate = new Date(date);
-        partDate.setMonth(partDate.getMonth() + i);
-        parts.push({
-          income_id: newIncome.id,
-          amount: parcelaValue,
-          date: partDate.toISOString().split('T')[0],
-          label: `${i + 1}ª parcela`
-        });
-      }
-      await IncomePart.bulkCreate(parts);
-    }
+    const partsToInsert = parts.map((part) => ({
+      income_id: newIncome.id,
+      amount: part.amount,
+      date: part.date || date,
+      label: part.label || null,
+      payment_type: part.payment_type,
+      parcelas: part.parcelas || null,
+      desconto_maquininha: part.desconto_maquininha || null
+    }));
 
-    if (payment_type === 'sinal_e_fim') {
-      const parts = [
-        {
-          income_id: newIncome.id,
-          amount: amount / 2,
-          date: signal_date,
-          label: 'Sinal'
-        },
-        {
-          income_id: newIncome.id,
-          amount: amount / 2,
-          date: end_date,
-          label: 'Fim'
-        }
-      ];
-      await IncomePart.bulkCreate(parts);
-    }
+    await IncomePart.bulkCreate(partsToInsert);
 
     res.status(201).json(newIncome);
   } catch (error) {

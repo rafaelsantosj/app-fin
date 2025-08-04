@@ -1,16 +1,32 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const IncomePart = sequelize.define('IncomePart', {
-  amount: DataTypes.DECIMAL(10, 2),
-  date: DataTypes.DATE,
-  label: DataTypes.STRING,
-  income_id: DataTypes.INTEGER
-}, {
-  tableName: 'income_parts',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: false
+const IncomePart = sequelize.define('income_parts', {
+  amount: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
+  },
+  payment_type: {
+    type: DataTypes.STRING,
+    allowNull: false // Ex: 'dinheiro', 'cartao_credito', 'pix'
+  },
+  parcelas: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  desconto_maquininha: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: true
+  },
+  income_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'incomes',
+      key: 'id'
+    },
+    onDelete: 'CASCADE'
+  }
 });
 
 module.exports = IncomePart;
