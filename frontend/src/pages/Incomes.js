@@ -138,13 +138,14 @@ export default function Incomes() {
           <input type="text" placeholder="Descrição" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="p-2 border rounded" />
           <input type="number" placeholder="Valor total" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} className="p-2 border rounded" />
           <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="p-2 border rounded" />
-          <select value={form.payment_type} onChange={(e) => setForm({ ...form, payment_type: e.target.value })} className="p-2 border rounded">
+          <select value={form.payment_type} onChange={(e) => setForm({ ...form, payment_type: e.target.value, parts: [] })} className="p-2 border rounded">
             <option value="avista">À vista</option>
             <option value="parcelado">Parcelado</option>
             <option value="sinal_e_fim">Sinal e fim</option>
+            <option value="personalizado">Personalizado</option>
           </select>
 
-          {(form.payment_type === 'parcelado' || form.payment_type === 'sinal_e_fim') && (
+          {['parcelado', 'sinal_e_fim', 'personalizado'].includes(form.payment_type) && (
             <div className="col-span-full border p-4 rounded bg-gray-50">
               <h2 className="text-md font-semibold mb-2">Detalhamento da(s) Parte(s)</h2>
               {form.parts.map((part, index) => (
@@ -225,6 +226,7 @@ export default function Incomes() {
                         {item.payment_type === 'parcelado' && `Parcelado em ${item.installments}x`}
                         {item.payment_type === 'sinal_e_fim' && `Sinal e fim`}
                         {item.payment_type === 'avista' && `À vista`}
+                        {item.payment_type === 'personalizado' && `Personalizado`}
                       </div>
                     </td>
                     <td className="py-2 px-4">R$ {parseFloat(item.amount).toFixed(2)}</td>
