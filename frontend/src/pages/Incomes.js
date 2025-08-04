@@ -46,7 +46,8 @@ export default function Incomes() {
         ...p,
         amount: parseFloat(p.amount),
         parcelas: p.parcelas ? parseInt(p.parcelas) : null,
-        desconto_maquininha: p.desconto_maquininha ? parseFloat(p.desconto_maquininha) : null
+        desconto_maquininha: p.desconto_maquininha ? parseFloat(p.desconto_maquininha) : null,
+        date: p.date || form.date
       }))
     };
 
@@ -90,7 +91,8 @@ export default function Incomes() {
         amount: p.amount,
         payment_type: p.payment_type,
         parcelas: p.parcelas || '',
-        desconto_maquininha: p.desconto_maquininha || ''
+        desconto_maquininha: p.desconto_maquininha || '',
+        date: p.date
       })) || []
     });
   };
@@ -105,7 +107,7 @@ export default function Incomes() {
   const handleAddPart = () => {
     setForm({
       ...form,
-      parts: [...form.parts, { amount: '', payment_type: 'dinheiro', parcelas: '', desconto_maquininha: '' }]
+      parts: [...form.parts, { amount: '', payment_type: 'dinheiro', parcelas: '', desconto_maquininha: '', date: form.date }]
     });
   };
 
@@ -146,7 +148,7 @@ export default function Incomes() {
             <div className="col-span-full border p-4 rounded bg-gray-50">
               <h2 className="text-md font-semibold mb-2">Detalhamento da(s) Parte(s)</h2>
               {form.parts.map((part, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-2">
+                <div key={index} className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-2">
                   <input
                     type="number"
                     placeholder="Valor da parte"
@@ -175,6 +177,13 @@ export default function Incomes() {
                     placeholder="Desconto"
                     value={part.desconto_maquininha}
                     onChange={(e) => handlePartChange(index, 'desconto_maquininha', e.target.value)}
+                    className="p-2 border rounded"
+                  />
+                  <input
+                    type="date"
+                    placeholder="Data"
+                    value={part.date || form.date}
+                    onChange={(e) => handlePartChange(index, 'date', e.target.value)}
                     className="p-2 border rounded"
                   />
                   <button type="button" onClick={() => handleRemovePart(index)} className="text-red-600">Remover</button>
@@ -229,7 +238,12 @@ export default function Incomes() {
                     <tr key={part.id} className="bg-gray-50 border-t">
                       <td className="py-1 px-4">{formatDate(part.date)}</td>
                       <td className="py-1 px-4 text-sm">{part.label || part.payment_type}</td>
-                      <td className="py-1 px-4 text-sm">R$ {parseFloat(part.amount).toFixed(2)}</td>
+                      <td className="py-1 px-4 text-sm">
+                        R$ {(parseFloat(part.amount) - (parseFloat(part.desconto_maquininha) || 0)).toFixed(2)}
+                        <div className="text-xs text-gray-500 italic">
+                          bruto: R$ {parseFloat(part.amount).toFixed(2)}{part.desconto_maquininha ? ` - desc. R$ ${parseFloat(part.desconto_maquininha).toFixed(2)}` : ''}
+                        </div>
+                      </td>
                       <td className="py-1 px-4 text-xs italic text-gray-500">Parte</td>
                     </tr>
                   ))}
