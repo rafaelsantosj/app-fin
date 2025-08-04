@@ -86,7 +86,12 @@ export default function Incomes() {
       installments: item.installments || '',
       signal_date: item.signal_date || '',
       end_date: item.end_date || '',
-      parts: item.IncomeParts || []
+      parts: item.IncomeParts?.map(p => ({
+        amount: p.amount,
+        payment_type: p.payment_type,
+        parcelas: p.parcelas || '',
+        desconto_maquininha: p.desconto_maquininha || ''
+      })) || []
     });
   };
 
@@ -137,18 +142,7 @@ export default function Incomes() {
             <option value="sinal_e_fim">Sinal e fim</option>
           </select>
 
-          {form.payment_type === 'parcelado' && (
-            <input type="number" placeholder="Parcelas" value={form.installments} onChange={(e) => setForm({ ...form, installments: e.target.value })} className="p-2 border rounded col-span-2" />
-          )}
-
-          {form.payment_type === 'sinal_e_fim' && (
-            <>
-              <input type="date" placeholder="Data do sinal" value={form.signal_date} onChange={(e) => setForm({ ...form, signal_date: e.target.value })} className="p-2 border rounded" />
-              <input type="date" placeholder="Data final" value={form.end_date} onChange={(e) => setForm({ ...form, end_date: e.target.value })} className="p-2 border rounded" />
-            </>
-          )}
-
-          {form.payment_type !== 'avista' && (
+          {(form.payment_type === 'parcelado' || form.payment_type === 'sinal_e_fim') && (
             <div className="col-span-full border p-4 rounded bg-gray-50">
               <h2 className="text-md font-semibold mb-2">Detalhamento da(s) Parte(s)</h2>
               {form.parts.map((part, index) => (
