@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://app-187213420727.us-central1.run.app/api',
+  baseURL: 'https://app-fin-187213420727.us-central1.run.app',
 });
 
 // Adiciona token de autenticação em cada requisição
